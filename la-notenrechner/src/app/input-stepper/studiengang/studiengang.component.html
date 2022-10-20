@@ -1,8 +1,8 @@
-<mat-card-subtitle> Wähle deinen Studiengang </mat-card-subtitle>
+<mat-card-subtitle> Wähle deinen Studiengang</mat-card-subtitle>
 <div class="flex-col">
   <mat-form-field appearance="fill">
     <mat-label>Studiengang</mat-label>
-    <mat-select (selectionChange)="selectedDegree = $event.value">
+    <mat-select (selectionChange)="selectedDegree = $event.value" required>
       <mat-option *ngFor="let degree of getDegrees()" [value]="degree">
         {{ degree }}
       </mat-option>
@@ -23,9 +23,8 @@
         <!-- Optionen -->
         <mat-select (selectionChange)="selectedSubjects[i - 1] = $event.value">
           <mat-option
-            *ngFor="let subject of getSubjects(selectedDegree)"
-            [value]="subject"
-          >
+            *ngFor="let subject of getRemainingSubjects(selectedDegree,i-1)"
+            [value]="subject">
             {{ subject }}
           </mat-option>
         </mat-select>

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import {
   degree,
   DegreeSpecsService,
@@ -9,6 +10,12 @@ import { StudiengangComponent } from '../studiengang/studiengang.component';
   selector: 'app-input-stepper',
   templateUrl: './input-stepper.component.html',
   styleUrls: ['./input-stepper.component.scss'],
+  providers: [
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: {showError: true},
+    },
+  ],
 })
 export class InputStepperComponent implements OnInit {
   @ViewChild(StudiengangComponent)

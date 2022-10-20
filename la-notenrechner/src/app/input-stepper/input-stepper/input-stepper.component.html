@@ -6,9 +6,9 @@
     <mat-step [completed]="step1.completed()" [editable]="true">
       <ng-template matStepLabel>Studiengang</ng-template>
       <app-studiengang #step1></app-studiengang>
-      <div class="actions">
+      <div class="actions" >
         <!-- prettier-ignore -->
-        <button mat-raised-button color="primary" matStepperNext [disabled]="!step1.completed()" >Next</button>
+        <button mat-raised-button color="primary" matStepperNext [disabled]="!step1.completed()" style="float: right">Weiter</button>
       </div>
     </mat-step>
 
@@ -26,7 +26,8 @@
       ></app-leistungen-fach>
       <div class="actions">
         <!-- prettier-ignore -->
-        <button mat-raised-button color="primary" matStepperNext [disabled]="!step2.completed()">Next</button>
+        <button mat-raised-button color="primary" matStepperPrevious>Zurück</button>
+        <button mat-raised-button color="primary" matStepperNext [disabled]="!step2.completed()" style="float: right">Weiter</button>
       </div>
     </mat-step>
     <!--Step 3: Auswahl der EWS Leistungen  -->

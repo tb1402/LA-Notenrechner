@@ -1,1 +1,7 @@
 TODO.txt
+
+#intellij and vs code files
+.idea/
+
+#angular cache
+.angular/cache/

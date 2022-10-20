@@ -24,6 +24,10 @@ export class StudiengangComponent {
     return this.degSpec.getSubjectNames(degree);
   }
 
+  getRemainingSubjects(degree:string, currentSelectPosition:number):string[]{
+    return this.getSubjects(degree).filter(s=>this.selectedSubjects.indexOf(s)===-1||this.selectedSubjects.indexOf(s)===currentSelectPosition)
+  }
+
   constructor(private degSpec: DegreeSpecsService) {}
 
   completed(): boolean {
@@ -41,7 +45,7 @@ export class StudiengangComponent {
       }
     }
 
-    return this.duplicatedSubject() == false;
+    return !this.duplicatedSubject();
   }
 
   range(start: number, end: number): number[] {
@@ -52,7 +56,7 @@ export class StudiengangComponent {
     return ans;
   }
 
-  duplicatedSubject() {
+  duplicatedSubject():boolean {
     if (this.selectedSubjects.length == 0) {
       return false;
     }
@@ -60,10 +64,10 @@ export class StudiengangComponent {
     if (n <= 1) {
       return false;
     }
-    let sub = this.selectedSubjects;
+    let sub = this.selectedSubjects.filter(s=>s!=="");
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
-        if (sub[i] == sub[j] && sub[i] != '') {
+        if (sub[i] == sub[j]) {
           return true;
         }
       }
