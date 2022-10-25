@@ -13,7 +13,7 @@
       <mat-form-field appearance="fill">
         <!-- Titel -->
         <mat-label>
-          <div *ngIf="getDegreeSubjectCount(selectedDegree) > 1">
+          <div *ngIf="getDegreeSubjectCount(selectedDegree) > 1" i18n>
             Fach {{ i }}
           </div>
           <div *ngIf="getDegreeSubjectCount(selectedDegree) <= 1">
@@ -21,7 +21,7 @@
           </div>
         </mat-label>
         <!-- Optionen -->
-        <mat-select (selectionChange)="selectedSubjects[i - 1] = $event.value">
+        <mat-select (selectionChange)="selectedSubjects[i - 1] = $event.value" required>
           <mat-option
             *ngFor="let subject of getRemainingSubjects(selectedDegree,i-1)"
             [value]="subject">
@@ -32,6 +32,6 @@
     </div>
   </div>
 </div>
-<div *ngIf="duplicatedSubject()">
+<div *ngIf="duplicatedSubject()" i18n>
   Die einzelnen Fächer müssen sich unterscheiden
 </div>
