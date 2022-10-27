@@ -1,5 +1,5 @@
-import { Component, OnInit, Output } from '@angular/core';
-import { DegreeSpecsService } from 'src/app/shared/degree-specs.service';
+import {Component, Output} from '@angular/core';
+import {DegreeSpecsService, subject} from 'src/app/shared/degree-specs.service';
 
 @Component({
   selector: 'app-studiengang',
@@ -24,11 +24,12 @@ export class StudiengangComponent {
     return this.degSpec.getSubjectNames(degree);
   }
 
-  getRemainingSubjects(degree:string, currentSelectPosition:number):string[]{
-    return this.getSubjects(degree).filter(s=>this.selectedSubjects.indexOf(s)===-1||this.selectedSubjects.indexOf(s)===currentSelectPosition)
+  getRemainingSubjects(degree: string, currentSelectPosition: number): string[] {
+    return this.getSubjects(degree).filter(s => this.selectedSubjects.indexOf(s) === -1 || this.selectedSubjects.indexOf(s) === currentSelectPosition)
   }
 
-  constructor(private degSpec: DegreeSpecsService) {}
+  constructor(private degSpec: DegreeSpecsService) {
+  }
 
   completed(): boolean {
     if (!this.selectedDegree) {
@@ -44,8 +45,10 @@ export class StudiengangComponent {
         return false;
       }
     }
+    if (this.duplicatedSubject()) return false;
 
-    return !this.duplicatedSubject();
+    localStorage.setItem("degreeName", this.selectedDegree);
+    return true;
   }
 
   range(start: number, end: number): number[] {
@@ -56,7 +59,7 @@ export class StudiengangComponent {
     return ans;
   }
 
-  duplicatedSubject():boolean {
+  duplicatedSubject(): boolean {
     if (this.selectedSubjects.length == 0) {
       return false;
     }
@@ -64,7 +67,7 @@ export class StudiengangComponent {
     if (n <= 1) {
       return false;
     }
-    let sub = this.selectedSubjects.filter(s=>s!=="");
+    let sub = this.selectedSubjects.filter(s => s !== "");
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
         if (sub[i] == sub[j]) {
@@ -73,5 +76,38 @@ export class StudiengangComponent {
       }
     }
     return false;
+  }
+
+  uploadData(): void {
+    let files: FileList | null = (<HTMLInputElement>document.getElementById("fileInput")).files;
+    if (files === null || files.length === 0) return;
+
+    if (!files[0].type || files[0].type !== "application/json") return;
+    let reader = new FileReader();
+
+    let progressDiv = document.getElementById("uploadProgress");
+    reader.addEventListener("progress", (evt) => {
+      if (progressDiv === null) return;
+
+      progressDiv.innerText = `${Math.round(evt.loaded / evt.total * 100)}`;
+    });
+    reader.addEventListener("loadend", () => {
+      if (typeof reader.result !== "string") return;
+      let jsonData: any = JSON.parse(reader.result);
+
+      this.selectedDegree = jsonData.degreeName;
+      this.degSpec.degrees[this.selectedDegree] = jsonData.data;
+
+      let dataSubjects: { [key: string]: subject } = jsonData.data.subjects;
+      let i = 0;
+      for (let key in dataSubjects) {
+        this.selectedSubjects[i] = key;
+        i++;
+      }
+      console.log(this.selectedSubjects);
+      this.completed();
+    });
+
+    reader.readAsText(files[0]);
   }
 }

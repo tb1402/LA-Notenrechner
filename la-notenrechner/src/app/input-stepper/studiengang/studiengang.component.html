@@ -35,3 +35,11 @@
 <div *ngIf="duplicatedSubject()">
   Die einzelnen Fächer müssen sich unterscheiden
 </div>
+<div style="display: grid">
+  <label for="fileInput">Daten importieren</label>
+  <input id="fileInput" type="file" accept="application/json"/>
+  <button mat-raised-button color="primary" (click)="uploadData()">
+    Eingaben importieren
+  </button>
+  <div id="uploadProgress"></div>
+</div>
