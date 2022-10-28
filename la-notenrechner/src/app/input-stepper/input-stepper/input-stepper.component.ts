@@ -5,6 +5,7 @@ import {
   DegreeSpecsService,
 } from 'src/app/shared/degree-specs.service';
 import { StudiengangComponent } from '../studiengang/studiengang.component';
+import {MatStepper} from "@angular/material/stepper";
 
 @Component({
   selector: 'app-input-stepper',
@@ -20,6 +21,9 @@ import { StudiengangComponent } from '../studiengang/studiengang.component';
 export class InputStepperComponent implements OnInit {
   @ViewChild(StudiengangComponent)
   private studiengang!: StudiengangComponent;
+
+  @ViewChild("stepper1")
+  private stepper!: MatStepper;
 
   constructor(private degSpec: DegreeSpecsService) {}
 

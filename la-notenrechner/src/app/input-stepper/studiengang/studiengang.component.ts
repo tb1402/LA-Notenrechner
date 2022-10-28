@@ -1,5 +1,6 @@
-import {Component, Output} from '@angular/core';
+import {Component, Output, ViewChild} from '@angular/core';
 import {DegreeSpecsService, subject} from 'src/app/shared/degree-specs.service';
+import {MatStepper} from "@angular/material/stepper";
 
 @Component({
   selector: 'app-studiengang',
@@ -11,6 +12,8 @@ export class StudiengangComponent {
   selectedDegree: string = '';
   @Output()
   selectedSubjects: string[] = [];
+
+  private stepper:MatStepper;
 
   getDegrees(): string[] {
     return this.degSpec.getDegreeNames();
@@ -28,7 +31,8 @@ export class StudiengangComponent {
     return this.getSubjects(degree).filter(s => this.selectedSubjects.indexOf(s) === -1 || this.selectedSubjects.indexOf(s) === currentSelectPosition)
   }
 
-  constructor(private degSpec: DegreeSpecsService) {
+  constructor(private degSpec: DegreeSpecsService, stepper:MatStepper) {
+    this.stepper=stepper;
   }
 
   completed(): boolean {
@@ -106,6 +110,7 @@ export class StudiengangComponent {
       }
       console.log(this.selectedSubjects);
       this.completed();
+      this.stepper.next();
     });
 
     reader.readAsText(files[0]);

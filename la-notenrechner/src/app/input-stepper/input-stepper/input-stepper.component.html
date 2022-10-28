@@ -1,7 +1,7 @@
 <!-- <mat-stepper> -->
 <mat-card>
   <mat-card-title>Trage deine Noten ein</mat-card-title>
-  <mat-stepper linear>
+  <mat-stepper linear #stepper1>
     <!--Step 1: Auswahl des Studiengangs  -->
     <mat-step [completed]="step1.completed()" [editable]="true">
       <ng-template matStepLabel>Studiengang</ng-template>
