@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import {
   degree,
   DegreeSpecsService,
 } from 'src/app/shared/degree-specs.service';
-import { StudiengangComponent } from '../studiengang/studiengang.component';
+import {StudiengangComponent} from '../studiengang/studiengang.component';
 import {MatStepper} from "@angular/material/stepper";
 
 @Component({
@@ -22,12 +22,18 @@ export class InputStepperComponent implements OnInit {
   @ViewChild(StudiengangComponent)
   private studiengang!: StudiengangComponent;
 
-  @ViewChild("stepper1")
+  /**
+   * Reference to the stepper
+   * @private
+   */
+  @ViewChild("stepper")
   private stepper!: MatStepper;
 
-  constructor(private degSpec: DegreeSpecsService) {}
+  constructor(private degSpec: DegreeSpecsService) {
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   getSelectedDegree(): string {
     if (this.studiengang) {
@@ -35,6 +41,7 @@ export class InputStepperComponent implements OnInit {
     }
     return '';
   }
+
   getSelectedSubjects(): string[] {
     if (this.studiengang && this.studiengang.selectedSubjects.length != 0) {
       return this.studiengang.selectedSubjects;
@@ -47,5 +54,15 @@ export class InputStepperComponent implements OnInit {
       this.getSelectedDegree(),
       this.getSelectedSubjects()
     );
+  }
+
+  /**
+   * Called, whe the studiengang-component sends data via its evetnEmitter
+   * @param value value sent by the component
+   */
+  emitterCallback(value: string) {
+    //"next" value to move to the next step
+    //NOTE: the delay is used, as in testing a direct call would do nothing (because the current compoenent will be reloaded after the data changed)
+    if (value === "next") setTimeout(() => this.stepper.next(), 500);
   }
 }
