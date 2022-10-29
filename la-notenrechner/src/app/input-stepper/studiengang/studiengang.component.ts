@@ -14,7 +14,7 @@ export class StudiengangComponent implements AfterViewInit {
 
   /**
    * Used to be able to communicate with the parent component (which has access to the stepper)
-   * Primarely used to signal the stepper to go to the next step, after importing the file
+   * Primarily used to signal the stepper to go to the next step, after importing the file
    */
   @Output()
   eventEmitter: EventEmitter<string> = new EventEmitter<string>();
@@ -32,6 +32,7 @@ export class StudiengangComponent implements AfterViewInit {
   }
 
   getRemainingSubjects(degree: string, currentSelectPosition: number): string[] {
+    //console.log(this.degSpec.degrees);
     return this.getSubjects(degree).filter(s => this.selectedSubjects.indexOf(s) === -1 || this.selectedSubjects.indexOf(s) === currentSelectPosition)
   }
 
@@ -164,19 +165,33 @@ export class StudiengangComponent implements AfterViewInit {
       }
 
       //set the degree name and override the degree spec with data from file
+      console.log(this.degSpec.degrees);
       this.selectedDegree = jsonData.degreeName;
-      this.degSpec.degrees[this.selectedDegree] = jsonData.data;
 
-      //set selected subjects (needed for dymnamic step loading)
-      let dataSubjects: { [key: string]: subject } = jsonData.data.subjects;
+      //get subjects from json and degree subjects
+      //as the json file contains only contains the selected subject values (the other options are lost during the steps and I don't want to search where),
+      //each subject from the json file will override the subject in degree-spec and all not selected subject will be left untouched, so they are still available as select option
+      let jsonSubjects: { [key: string]: subject } = jsonData.data.subjects;
+      let degreeSubjects: { [key: string]: subject } = this.degSpec.degrees[this.selectedDegree].subjects;
+
+      //loop through the subject key of the json subject
       let i = 0;
-      for (let key in dataSubjects) {
+      for (let key in jsonSubjects) {
+        //json has data for subject => override it and add name to select subjects
         this.selectedSubjects[i] = key;
+        degreeSubjects[key] = jsonSubjects[key];
+
         i++;
       }
 
+      //override the json subject with the current degree array
+      jsonData.data.subjects = degreeSubjects;
+
+      //now override the complete degree object with json data
+      this.degSpec.degrees[this.selectedDegree] = jsonData.data;
+
       //emit data, which causes the stepper to go to the next step
-      infoDiv!.innerText="Du wirst zum nächsten Schritt weitergeleitet, bitte warten...";
+      infoDiv!.innerText = "Du wirst zum nächsten Schritt weitergeleitet, bitte warten...";
       this.eventEmitter.emit("next");//send data to parent (input-stepper)
     });
 

@@ -2,7 +2,7 @@
 <div class="flex-col">
   <mat-form-field appearance="fill">
     <mat-label>Studiengang</mat-label>
-    <mat-select (selectionChange)="selectedDegree = $event.value" required>
+    <mat-select (selectionChange)="selectedDegree = $event.value" required [value]="this.selectedDegree">
       <mat-option *ngFor="let degree of getDegrees()" [value]="degree">
         {{ degree }}
       </mat-option>

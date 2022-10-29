@@ -12,7 +12,8 @@ export class GradePickerComponent implements OnInit {
 
   grades = GRADES;
 
-  constructor() {}
+  constructor() {
+  }
 
   ngOnInit(): void {}
 }

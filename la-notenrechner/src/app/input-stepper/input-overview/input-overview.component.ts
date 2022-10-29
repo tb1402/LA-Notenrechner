@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {DegreeCalculatorService} from 'src/app/shared/degree-calculator.service';
 import {degree, subject} from 'src/app/shared/degree-specs.service';
-import {timestamp} from "rxjs";
 
 @Component({
   selector: 'app-input-overview',
@@ -50,21 +49,28 @@ export class InputOverviewComponent implements OnInit {
     return this.calc.getTotalECTS(this.degree, subject, true);
   }
 
-  dataDownloadPrompt(): void {
-    let data = {
-      data: this.degree,
-      degreeName: localStorage.getItem("degreeName")
-    };
+  /**
+   * Causes the browser to download a .json file with all the entered data
+   */
+  downloadData(): void {
+    //create a blob with the given data encoded in json
+    let blobObj: Blob = new Blob([JSON.stringify({
+      data: this.degree,//dump all data for the current degree
+      degreeName: localStorage.getItem("degreeName")//will be set in first step, after selecting the degree
+    })], {type: "application/json;charset=utf-8;"});
 
-    let blobObj: Blob = new Blob([JSON.stringify(data)], {type: "application/json;charset=utf-8;"});
+    //create an <a> link element (will be clicked later to download the file)
     let linkObj: HTMLAnchorElement = document.createElement("a");
-    linkObj.setAttribute("download", "notenrechner-export-" + Date.now() + ".json");
+    linkObj.setAttribute("download", "notenrechner-export-" + Date.now() + ".json");//download attribute with filename
     linkObj.style.display = "none";
-    linkObj.href = window.URL.createObjectURL(blobObj);
+    linkObj.href = window.URL.createObjectURL(blobObj);//creat data url and set it to the link
 
+    //add the (invisible) link element to the body, click it (starts the download) and remove it again
     document.body.appendChild(linkObj);
     linkObj.click();
     document.body.removeChild(linkObj);
+
+    //revoke the url, to free-up resources
     window.URL.revokeObjectURL(linkObj.href);
   }
 }

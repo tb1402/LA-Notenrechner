@@ -16,7 +16,9 @@ export class LeistungenFachComponent implements OnInit {
   @Input('subjectName')
   subjectName: string = '';
 
-  constructor(private degSpec: DegreeSpecsService) {}
+  constructor(private degSpec: DegreeSpecsService) {
+    console.log(degSpec)
+  }
 
   ngOnInit(): void {}
 
